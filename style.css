@@ -1,0 +1,732 @@
+    /* Global Styles */
+    body {
+      background-color: #f4f6f9; /* Awalnya putih untuk splash screen */
+      font-family: 'Poppins', sans-serif;
+      color: #333333;
+      min-height: 100vh;
+      overflow-x: hidden; /* Izinkan scroll vertikal */
+      transition: background-color 0.5s ease;
+      display: flex; /* Flex Container */
+      align-items: center; /* Vertikal center */
+      justify-content: center; /* Horizontal center */
+    }
+    /* Splash Screen Styles */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff; /* Latar belakang putih */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      animation: fadeOutSplash 1s 3s forwards;
+    }
+    .splash-screen .logo {
+      width: 80vw; /* Lebar 80% dari viewport width */
+      max-width: 800px; /* Maksimal 600px */
+      animation: logoBounce 2s ease-in-out infinite;
+      object-fit: contain; /* Menjaga proporsi gambar */
+    }
+    @keyframes logoBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes fadeOutSplash {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* Loading Screen Styles */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff; /* Latar belakang putih */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      animation: fadeOutLoading 1s 3s forwards;
+      display: none; /* Sembunyikan secara default */
+    }
+    .loading-screen .plane {
+      font-size: 60px; /* Diperbesar */
+      animation: planeSpin 2s linear infinite;
+      margin-bottom: 20px; /* Ditambah */
+      color: #4b0082; /* Ungu Gelap */
+    }
+    .loading-screen .loading-text {
+      font-size: 24px; /* Diperbesar */
+      color: #4b0082;
+      font-weight: 600;
+    }
+    @keyframes planeSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeOutLoading {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* Welcome Screen Styles */
+    .welcome-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #4b0082; /* Ungu Gelap */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2500;
+      text-align: center;
+      padding: 20px;
+      overflow-y: auto;
+      color: #ffffff; /* Warna putih */
+      transition: background-color 0.5s ease, color 0.5s ease;
+      display: none; /* Sembunyikan secara default */
+    }
+    .welcome-screen img {
+      width: 90vw; /* Lebar 90% dari viewport width */
+      max-width: 800px; /* Maksimal 800px */
+      margin-bottom: 20px;
+      animation: robotSlideIn 1.5s ease-out;
+      object-fit: contain; /* Menjaga proporsi gambar */
+    }
+    .welcome-screen .welcome-text {
+      font-size: 26px; /* Diperbesar */
+      color: #ffffff; /* Putih */
+      font-family: 'Poppins', sans-serif; /* Font jelas dan elegan */
+      font-weight: 600;
+      max-width: 90%;
+      opacity: 1; /* Agar terlihat */
+      white-space: pre-wrap; /* Mendukung line breaks */
+      overflow: hidden;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Efek bercahaya */
+    }
+    @keyframes robotSlideIn {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    /* Auth Container Styles */
+    .auth-container {
+      background-color: #ffffff; /* Warna putih */
+      border-radius: 12px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 400px; /* Lebar maksimum 400px */
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      z-index: 1001;
+      animation: fadeIn 1s ease forwards;
+      color: #333333; /* Warna teks gelap */
+      overflow-y: auto;
+      display: none; /* Sembunyikan secara default */
+    }
+    .auth-container h2 {
+      margin-bottom: 25px;
+      font-size: 28px;
+      color: #4b0082; /* Ungu Gelap */
+      font-weight: 600;
+    }
+    .auth-container .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .auth-container .input-group input {
+      width: 100%;
+      padding: 12px 20px;
+      border: 1px solid #d1d3e2;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+      background-color: #ffffff;
+      color: #333333;
+    }
+    .auth-container .input-group input:focus {
+      border-color: #4b0082;
+      outline: none;
+      box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+    }
+    .auth-container .input-group .fa-eye {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #888;
+      transition: color 0.3s ease;
+    }
+    .auth-container .input-group .fa-eye:hover {
+      color: #4b0082;
+    }
+    .auth-container .auth-btn {
+      background-color: #4b0082; /* Ungu Gelap */
+      color: #ffffff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width: 100%;
+      font-weight: 500;
+    }
+    .auth-container .auth-btn:hover {
+      background-color: #3a0060;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .auth-container .signup-link, .auth-container .login-link {
+      display: block;
+      margin-top: 25px;
+      color: #333333;
+      font-size: 16px;
+    }
+    .auth-container .signup-link a, 
+    .auth-container .login-link a {
+      color: #4b0082; /* Warna ungu gelap */
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .auth-container .signup-link a:hover, 
+    .auth-container .login-link a:hover {
+      color: #3a0060;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Navbar for Dashboard */
+    .navbar-dashboard {
+      color: #ffffff;
+      background-color: #4b0082;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the title */
+    }
+    .navbar-dashboard h2 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 2.5rem; /* Diperbesar */
+      font-weight: 800; /* Lebih tebal */
+      text-align: center;
+    }
+
+    /* Logout Button Positioned Fixed at Bottom Right within App */
+    .logout-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ff0015; /* Merah Terang */
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: none; /* Sembunyikan secara default */
+      align-items: center;
+      font-weight: 500;
+      z-index: 1001;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .logout-button.visible {
+      display: flex;
+    }
+    .logout-button:hover {
+      background-color: #d62828;
+      transform: translateY(-2px);
+    }
+    .logout-button i {
+      margin-right: 8px;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-top: 60px; /* Dikurangi dari 80px menjadi 60px */
+      padding: 30px;
+      width: 100%;
+      text-align: center;
+      overflow-y: auto;
+      height: calc(100vh - 60px); /* Menyesuaikan dengan margin-top yang baru */
+      background-color: #ffffff; /* Putih */
+      transition: background-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    /* Sections */
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .section.active {
+      display: block;
+    }
+
+    /* Buttons in App */
+    .menu-button {
+      width: auto; /* Tidak memanjang */
+      padding: 12px 20px; /* Dikurangi sedikit */
+      margin-bottom: 20px;
+      background-color: #4b0082; /* Ungu Gelap */
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      display: inline-flex; /* Untuk ukuran otomatis */
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-weight: 500;
+      min-width: 180px; /* Dikurangi sedikit */
+    }
+    .menu-button:hover {
+      background-color: #3a0060;
+      transform: translateY(-2px);
+    }
+    .menu-button i {
+      margin-right: 10px;
+      font-size: 1.5rem;
+    }
+
+    /* Zoom Button */
+    .zoom-button {
+      /* Dihapus karena fitur perbesar dihapus */
+      display: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .navbar-dashboard h2 {
+        font-size: 1.8rem;
+      }
+      .logout-button {
+        padding: 8px 14px;
+        font-size: 12px;
+        bottom: 10px;
+        right: 10px;
+      }
+      .menu-button {
+        padding: 10px 16px;
+        font-size: 16px;
+        min-width: 160px;
+      }
+      .chart-container {
+        height: 300px;
+      }
+      .splash-screen .logo {
+        width: 70vw; /* Lebar 70% dari viewport width */
+        max-width: 400px;
+      }
+      .welcome-screen img {
+        width: 70vw; /* Lebar 70% dari viewport width */
+        max-width: 600px;
+      }
+      .welcome-screen .welcome-text {
+        font-size: 20px;
+      }
+      .main-content {
+        margin-top: 100px; /* Adjusted for smaller screens */
+        height: calc(100vh - 100px); /* Menyesuaikan dengan margin-top yang baru */
+      }
+      .auth-container h2 {
+        font-size: 24px;
+      }
+      .auth-container .auth-btn {
+        font-size: 16px;
+        padding: 12px 18px;
+      }
+      .auth-container .input-group input {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
+      .auth-container .input-group .fa-eye {
+        right: 16px;
+      }
+      .zoom-button {
+        /* Dihapus karena fitur perbesar dihapus */
+        display: none;
+      }
+    }
+
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #28a745; /* Hijau untuk success */
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 3000;
+      opacity: 0;
+      animation: slideIn 0.5s forwards;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(100%); }
+    }
+
+    /* Add Expense Form */
+    .expense-form input,
+    .expense-form select {
+      margin-bottom: 15px;
+      background-color: #ffffff;
+      color: #333333;
+      border: 1px solid #d1d3e2;
+      border-radius: 8px;
+      padding: 12px 16px;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .expense-form input:focus,
+    .expense-form select:focus {
+      border-color: #4b0082;
+      outline: none;
+      box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+    }
+    .expense-form button {
+      margin-top: 10px;
+      background-color: #4b0082;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .expense-form button:hover {
+      background-color: #3a0060;
+      transform: translateY(-2px);
+    }
+
+    /* Category Dropdown */
+    .category-dropdown {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    .category-dropdown button {
+      width: 100%;
+      background-color: #333333; /* Warna gelap */
+      color: #ffffff; /* Teks putih */
+      border: 1px solid #555555;
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+    .category-dropdown button:hover {
+      background-color: #444444;
+    }
+    .category-options {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #333333; /* Warna gelap */
+      border: 1px solid #555555;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    .category-options.show {
+      display: block;
+    }
+    .category-options button {
+      width: 100%;
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      color: #ffffff; /* Teks putih */
+      transition: background-color 0.2s ease;
+    }
+    .category-options button:hover {
+      background-color: #444444;
+    }
+    .add-category-input {
+      display: none;
+      padding: 10px 16px;
+      border-top: 1px solid #555555;
+      background-color: #444444; /* Warna gelap */
+    }
+    .add-category-input input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #555555;
+      border-radius: 4px;
+      background-color: #555555;
+      color: #ffffff; /* Teks putih */
+    }
+
+    /* Chart Containers */
+    .chart-container {
+      margin-top: 30px;
+      position: relative;
+      width: 100%;
+      height: 500px; /* Diperbesar */
+      background-color: #ffffff; /* Putih */
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      .chart-container {
+        height: 300px;
+      }
+    }
+
+    /* Expenses List */
+    .expenses-list {
+      margin-top: 30px;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .expenses-list h5 {
+      margin-bottom: 15px;
+      color: #4b0082; /* Ungu Gelap */
+      font-weight: 600;
+    }
+    .expenses-list ul {
+      list-style: none;
+      padding: 0;
+    }
+    .expenses-list li {
+      background: #ffffff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s ease;
+      position: relative; /* Untuk toggle icon */
+    }
+    .expenses-list li:hover {
+      background-color: #f0f0f0;
+    }
+    .expenses-list li i {
+      color: #e63946; /* Merah Elegan */
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .expenses-list li i:hover {
+      color: #d62828;
+    }
+    .expenses-list ul ul li {
+      background-color: #f9f9f9;
+      padding: 10px 15px;
+      margin-bottom: 5px;
+      border-radius: 6px;
+    }
+
+    /* Category Percentages */
+    #category-percentages p, #history-category-percentages p {
+      margin: 0;
+      padding: 5px 0;
+      color: #4b0082; /* Ungu Gelap */
+      font-weight: 600;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #category-percentages p span, #history-category-percentages p span {
+      font-weight: 700;
+      color: #ffffff;
+      margin-left: 10px;
+      background-color: #4b0082;
+      border-radius: 12px;
+      padding: 4px 8px;
+    }
+
+    /* Back to Dashboard Button */
+    .back-button {
+      background-color: #ffffff;
+      color: #4b0082; /* Ungu Gelap */
+      border: 2px solid #4b0082;
+      padding: 10px 20px; /* Dikurangi sedikit */
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px; /* Dikurangi sedikit */
+      display: inline-flex; /* Untuk ukuran otomatis */
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-weight: 500;
+      min-width: 180px; /* Dikurangi sedikit */
+    }
+    .back-button:hover {
+      background-color: #4b0082;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+    .back-button i {
+      margin-right: 5px;
+    }
+
+    /* Tips Button */
+    .tips-button {
+      background-color: #4b0082; /* Ungu Gelap */
+      color: #ffffff; /* Teks putih */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+    .tips-button:hover {
+      background-color: #3a0060;
+      transform: translateY(-2px);
+    }
+
+    /* Tips Modal */
+    .modal-tips-content {
+      text-align: center;
+      font-size: 18px;
+      color: #333333;
+    }
+
+    /* Print Animation */
+    .print-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(75, 0, 130, 0.9); /* Ungu Gelap */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      display: none;
+      color: #ffffff;
+      flex-direction: column;
+    }
+    .print-animation .spinner {
+      font-size: 60px;
+      animation: spin 2s linear infinite;
+      margin-bottom: 20px;
+    }
+    .print-animation .print-text {
+      font-size: 24px;
+      font-weight: 500;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer Watermark in PDF */
+    .pdf-footer {
+      text-align: center;
+      color: #4b0082; /* Ungu Gelap */
+      font-size: 10px;
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+
+    /* Table Styles in PDF */
+    .pdf-table {
+      color: #000000;
+    }
+
+    /* Responsive Logo and Mascot */
+    .splash-screen .logo,
+    .welcome-screen img {
+      width: 90vw; /* Lebar 90% dari viewport width */
+      max-width: 800px; /* Maksimal 800px */
+      object-fit: contain;
+    }
+
+    /* New Styles for Category Expense Enhancement */
+    .category-expense-enhanced {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .category-expense-enhanced h4 {
+      color: #4b0082;
+      margin-bottom: 20px;
+    }
+    .category-expense-enhanced .form-group {
+      margin-bottom: 15px;
+    }
+    .category-expense-enhanced .form-select {
+      background-color: #ffffff;
+      color: #333333;
+      border: 1px solid #d1d3e2;
+      border-radius: 8px;
+      padding: 10px 16px;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .category-expense-enhanced .form-select:focus {
+      border-color: #4b0082;
+      outline: none;
+      box-shadow: 0 0 5px rgba(75, 0, 130, 0.5);
+    }
+    .category-expense-enhanced .statistic {
+      text-align: left;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    .category-expense-enhanced .statistic p {
+      margin: 5px 0;
+    }
