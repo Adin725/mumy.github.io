@@ -186,7 +186,7 @@
 
       // Jalankan animasi typewriter
       const welcomeText = document.getElementById('welcome-text');
-      const fullText = "Selamat Datang di Paket Mumy Premium. Mumy akan membantumu dalam mengelola pengeluaran sehari-hari.";
+      const fullText = "Meraih Masa Depan Sukses Bersama Beasiswa Unggulan dengan Menjadi Insan Cerdas dan Kompetitif.";
       welcomeText.textContent = ''; // Kosongkan teks sebelum animasi
       typeWriter(welcomeText, fullText, 30, () => {
         // Setelah teks selesai ditulis, tunggu 2 detik dan tampilkan app
@@ -2184,4 +2184,3 @@ function generateRekapDataPDF(year, month, user, expenses, targetNumber, tujuanP
 
     // Fungsi untuk Merender Rekap Data PDF
     // Sudah diimplementasikan di fungsi generateRekapDataPDF()
-
