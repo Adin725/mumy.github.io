@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mumy (Manage Your Money)</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="splash-screen" id="splash-screen">
+    <img src="logoblack_mumy.jpg" alt="Splash Screen Mumy" class="splash-image">
+  </div>
+  
+  <div class="loading-screen" id="loading-screen">
+    <i class="fas fa-paper-plane plane"></i>
+    <div class="loading-text">Memproses data..</div>
+  </div>
+
+  <div class="welcome-screen" id="welcome-screen">
+    <img src="maskor_app.png" alt="Maskot Mumy"> 
+    <div class="welcome-text" id="welcome-text">Meraih masa depan sukses bersama Beasiswa Unggulan dengan menjadi Insan Cerdas dan Kompetitif.</div>
+  </div>
+
+  <div class="auth-container" id="auth-container">
+    <h2 id="auth-title">Log in</h2>
+    <div class="input-group">
+      <input type="email" id="auth-email" placeholder="E-mail" required>
+    </div>
+    <div class="input-group">
+      <input type="password" id="auth-password" placeholder="Password" required>
+      <i class="fas fa-eye" id="toggle-password"></i>
+    </div>
+    <button class="auth-btn" id="auth-btn">Login</button>
+    <div class="signup-link" id="auth-switch-link">
+      Belum punya akun? <a href="#" id="switch-to-register">Register di sini</a>
+    </div>
+  </div>
+
+  <div id="notification-container"></div>
+
+  <div class="container-fluid" id="app-container" style="display: none;">
+    
+    <nav class="navbar-dashboard">
+      <h2>Mumy (Manage Your Money)</h2>
+    </nav>
+
+    <main class="main-content text-center" id="main-content">
+
+      <div class="section active" id="dashboard-section">
+        <h3 class="mb-4">Dashboard</h3>
+        <button class="menu-button" id="menu-add-expense">
+          <i class="fas fa-plus-circle"></i> Tambah Pengeluaran
+        </button>
+        
+        <button class="menu-button" id="menu-dompet">
+          <i class="fas fa-wallet"></i> Dompet & Saldo
+        </button>
+        <button class="menu-button" id="menu-daily-expense">
+          <i class="fas fa-calendar-day"></i> Pengeluaran Harian
+        </button>
+        <button class="menu-button" id="menu-category-expense">
+          <i class="fas fa-chart-pie"></i> Pengeluaran per Kategori
+        </button>
+        <button class="menu-button" id="menu-print-expense">
+          <i class="fas fa-print"></i> Cetak Pengeluaran (PDF)
+        </button>
+        <button class="menu-button" id="menu-export-excel">
+          <i class="fas fa-file-excel"></i> Cetak Excel (Dataset)
+        </button>
+        <button class="menu-button" id="menu-history-expense">
+          <i class="fas fa-history"></i> Riwayat Pengeluaran
+        </button>
+        <button class="menu-button" id="menu-analisis">
+          <i class="fas fa-chart-line"></i> Analisis Sederhana
+        </button>
+      </div> <div class="section" id="dompet-section">
+        <h3 class="mb-4">Dompet & Saldo</h3>
+        
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="saldo-card-v2 tunai">
+              <div class="card-header">
+                <i class="fas fa-wallet"></i>
+                <span>Dompet (Tunai)</span>
+              </div>
+              <div class="card-body">
+                <span class="saldo-amount" id="saldo-tunai-display">Rp0</span>
+                <button class="btn btn-link btn-sm btn-reset-saldo" id="btn-reset-tunai">
+                  <i class="fas fa-undo-alt me-1"></i> Reset Saldo
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="saldo-card-v2 bank">
+              <div class="card-header">
+                <i class="fas fa-university"></i>
+                <span>Bank/E-Wallet (Non-Tunai)</span>
+              </div>
+              <div class="card-body">
+                <span class="saldo-amount" id="saldo-bank-display">Rp0</span>
+                <button class="btn btn-link btn-sm btn-reset-saldo" id="btn-reset-bank">
+                  <i class="fas fa-undo-alt me-1"></i> Reset Saldo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="saldo-actions text-center mb-4">
+          <button class="btn btn-primary" id="btn-tambah-pemasukan" data-bs-toggle="modal" data-bs-target="#pemasukanModal">
+            <i class="fas fa-plus me-2"></i> Tambah Pemasukan
+          </button>
+          <button class="btn btn-outline-secondary ms-2" id="btn-pindah-dompet" data-bs-toggle="modal" data-bs-target="#transferModal">
+            <i class="fas fa-exchange-alt me-2"></i> Pindah ke Dompet
+          </button>
+        </div>
+
+        <div class="budget-widget-container mt-4">
+          <details id="budget-details">
+            <summary class="budget-summary-header" id="budget-summary-header">
+              <div class="budget-summary-content">
+                <div>
+                  <h5 class="mb-0 fs-6 fw-semibold">Budget Bulan Ini</h5>
+                  <small class="text-muted" id="budget-sisa">Sisa: Rp0</small>
+                </div>
+                <span class="badge bg-light text-dark rounded-pill" id="budget-percentage">0%</span>
+              </div>
+              <div class="progress" style="height: 10px;" role="progressbar">
+                <div class="progress-bar" id="budget-progress-bar" style="width: 0%"></div>
+              </div>
+            </summary>
+            
+            <div class="budget-stats-dropdown-content" id="budget-stats-content">
+              <p class="text-muted small text-center">Memuat statistik...</p>
+            </div>
+          </details>
+          
+          <div class="d-flex justify-content-between align-items-center mt-1">
+            <button class="btn btn-link btn-sm p-0" id="btn-atur-budget" data-bs-toggle="modal" data-bs-target="#budgetModal">Atur/Edit Budget</button>
+            <button class="btn btn-link btn-sm p-0 text-danger" id="btn-reset-budget">
+              <i class="fas fa-undo-alt me-1"></i> Reset Budget
+            </button>
+          </div>
+        </div>
+
+        <div class="expenditure-saldo-widget mt-4 shadow-sm"> <div class="d-flex justify-content-between align-items-center mb-1">
+            
+            <div class="dropdown exp-saldo-dropdown">
+              <button class="btn btn-link btn-sm dropdown-toggle" type="button" id="expenditure-saldo-select" data-bs-toggle="dropdown" aria-expanded="false" data-current-value="tunai">
+                Total Keluar vs Tunai
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="expenditure-saldo-select">
+                <li><a class="dropdown-item active" href="#" data-value="tunai">vs Total Tunai</a></li>
+                <li><a class="dropdown-item" href="#" data-value="bank">vs Total Bank</a></li>
+                <li><a class="dropdown-item" href="#" data-value="total">vs Total Saldo</a></li>
+              </ul>
+            </div>
+            
+            <div class="d-flex align-items-center">
+              <span class="badge bg-light text-dark rounded-pill me-2" id="exp-saldo-percentage">0%</span>
+              <button class="btn btn-link btn-sm p-0 btn-reset-exp-saldo" id="btn-reset-exp-saldo" title="Reset Filter">
+                <i class="fas fa-undo-alt"></i>
+              </button>
+            </div>
+
+          </div>
+          
+          <div class="progress" style="height: 10px;"> <div class="progress-bar" id="exp-saldo-progress-bar" style="width: 0%;"></div>
+          </div>
+          <small class="text-muted" id="exp-saldo-info-text">Terpakai Rp0 dari Rp0</small>
+        </div>
+        
+        <button class="back-button" id="back-dompet-to-dashboard"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="add-expense-section">
+        <h3 class="mb-4">Tambah Pengeluaran</h3>
+        <form id="expense-form" class="expense-form">
+          <div class="row g-2 mb-3">
+            <div class="col-sm-7">
+              <label for="expense-date" class="form-label">Tanggal</label>
+              <input type="date" id="expense-date" class="form-control" required />
+            </div>
+            <div class="col-sm-5">
+              <label for="expense-time" class="form-label">Jam</label>
+              <input type="time" id="expense-time" class="form-control" required />
+            </div>
+          </div>
+          <input type="text" id="barang" class="form-control" placeholder="Barang" required />
+          <input type="number" id="amount" class="form-control" placeholder="Jumlah (Rp)" required />
+          <input type="hidden" id="kategori-selected" />
+          <div class="category-dropdown">
+            <button type="button" class="form-control text-start" id="kategori-button">Pilih Kategori <i class="fas fa-chevron-down float-end"></i></button>
+            <div class="category-options" id="category-options">
+              <button type="button" data-category="makanan berat">Makanan Berat</button>
+              <button type="button" data-category="makanan dan minuman ringan">Makanan dan Minuman Ringan</button>
+              <button type="button" data-category="pakaian">Pakaian</button>
+              <button type="button" data-category="elektronik">Elektronik</button>
+              <button type="button" data-category="peralatan rumah tangga">Peralatan Rumah Tangga</button>
+              <button type="button" data-category="perlengkapan alat tulis">Perlengkapan Alat Tulis</button>
+              <button type="button" data-category="kesehatan dan obat-obatan">Kesehatan dan Obat-obatan</button>
+              <button type="button" data-category="pendidikan">Pendidikan</button>
+              <button type="button" data-category="transportasi">Transportasi</button>
+              <button type="button" data-category="hiburan">Hiburan</button>
+              <button type="button" data-category="aksesoris">Aksesoris</button>
+              <button type="button" data-category="perawatan tubuh">Perawatan Tubuh</button>
+              <button type="button" id="add-new-category" data-category="add-new-category">Tambahkan Kategori Baru</button>
+              <div class="add-category-input" id="add-category-input">
+                <input type="text" id="new-category-input" class="form-control" placeholder="Kategori Baru"/>
+                <button type="button" class="btn btn-success btn-sm mt-2" id="save-new-category">Simpan</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="my-3 text-start">
+            <label class="form-label mb-2 fw-semibold">Sumber Pembayaran</label>
+            <div class="btn-group w-100" role="group" aria-label="Sumber Pembayaran">
+              <input type="radio" class="btn-check" name="sumber-pembayaran" id="sumber-tunai" value="tunai" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="sumber-tunai">
+                <i class="fas fa-wallet me-2"></i>Dompet (Tunai)
+                <small class="d-block" id="sumber-tunai-info">Sisa: Rp0</small>
+              </label>
+
+              <input type="radio" class="btn-check" name="sumber-pembayaran" id="sumber-bank" value="bank" autocomplete="off">
+              <label class="btn btn-outline-primary" for="sumber-bank">
+                <i class="fas fa-university me-2"></i>Bank (Non-Tunai)
+                <small class="d-block" id="sumber-bank-info">Sisa: Rp0</small>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100"><i class="fas fa-plus me-2"></i> Tambah</button>
+        </form>
+
+        <div class="expenses-list mt-4" id="expenses-list"> 
+          <h5>Riwayat Pengeluaran (Bulan Ini)</h5>
+          <ul id="expenses-ul" class="list-group list-group-flush"></ul> 
+        </div>
+        <button class="back-button" id="back-to-dashboard"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="daily-expense-section">
+        <h3 class="mb-4">Pengeluaran Harian</h3>
+        <div class="d-flex flex-wrap justify-content-center align-items-center mb-3 gap-2"> <button class="tips-button m-0" id="daily-tips-button"><i class="fas fa-info-circle me-2"></i> Tips</button>
+          <button class="menu-button-toggle" id="toggle-average-line" data-toggled="true">
+            <i class="fas fa-check-circle"></i> Garis Rata-rata
+          </button>
+          <button class="menu-button-special" id="animate-daily-chart">
+            <i class="fas fa-play-circle"></i> Animasikan
+          </button>
+        </div>
+        <div class="chart-container">
+          <button class="fullscreen-button" id="fullscreen-daily-chart" data-chart-target="daily-expense-chart">
+            <i class="fas fa-expand"></i>
+          </button>
+          <canvas id="daily-expense-chart"></canvas>
+        </div>
+        <div class="mt-3 text-start" id="daily-stats-container">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+    id="total-pengeluaran-wrapper" data-bs-toggle="collapse" href="#daily-stats-collapse" role="button" aria-expanded="false" aria-controls="daily-stats-collapse" style="cursor: pointer;">
+  <div> <i class="fas fa-wallet me-2 text-primary"></i>
+      <strong>Total Bulan Ini</strong>
+      <i class="fas fa-chevron-down toggle-arrow ms-2"></i> </div>
+  <div> <span class="badge bg-primary rounded-pill" id="total-pengeluaran">Rp0</span>
+      </div>
+</li>
+            <div class="collapse" id="daily-stats-collapse">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-calculator me-2 text-secondary"></i>Rata-rata Harian</div>
+                <span class="badge bg-secondary rounded-pill" id="rata-rata-harian">Rp0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-arrow-trend-up me-2 text-danger"></i>Hari Terboros</div>
+                <span class="badge bg-danger rounded-pill" id="hari-terboros">-</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-arrow-trend-down me-2 text-success"></i>Hari Terhemat</div>
+                <span class="badge bg-success rounded-pill" id="hari-terhemat">-</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-receipt me-2 text-warning"></i>Pengeluaran Tertinggi (1x)</div>
+                <span class="badge bg-warning rounded-pill" id="pengeluaran-tertinggi">-</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-tag me-2 text-info"></i>Pengeluaran Terendah (1x)</div>
+                <span class="badge bg-info rounded-pill" id="pengeluaran-terendah">-</span>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <button class="back-button" id="back-to-dashboard-2"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="category-expense-section">
+        <h3 class="mb-4">Pengeluaran per Kategori</h3>
+        <button class="tips-button mb-3" id="category-tips-button"><i class="fas fa-info-circle me-2"></i> Tips</button>
+        <div class="chart-container">
+          <button class="fullscreen-button" id="fullscreen-category-pie-chart" data-chart-target="category-expense-chart">
+            <i class="fas fa-expand"></i>
+          </button>
+          <canvas id="category-expense-chart"></canvas>
+        </div>
+        <div class="category-expense-enhanced">
+          <h4>Grafik Harian per Kategori (Line Chart)</h4>
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="select-category-month">Pilih Bulan:</label>
+              <select id="select-category-month" class="form-select">
+                <option value="">Pilih Bulan</option>
+              </select>
+            </div>
+            <div class="col-md-6 form-group">
+              <label for="select-category">Pilih Kategori:</label>
+              <select id="select-category" class="form-select" disabled>
+                <option value="">Pilih Kategori</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container mt-3"> <button class="fullscreen-button" id="fullscreen-category-daily-chart" data-chart-target="category-daily-chart">
+              <i class="fas fa-expand"></i>
+            </button>
+            <canvas id="category-daily-chart"></canvas>
+          </div>
+          <button class="btn btn-outline-primary btn-sm mt-3" id="toggle-category-stats" data-bs-toggle="collapse" href="#category-stats-collapse" role="button" aria-expanded="false" aria-controls="category-stats-collapse" disabled>
+            <i class="fas fa-info-circle me-1"></i> Lihat Detail Statistik <i class="fas fa-chevron-down ms-1 toggle-icon"></i>
+          </button>
+          <div class="collapse" id="category-stats-collapse">
+            <div class="statistic mt-2" id="category-statistic"></div>
+          </div>
+        </div>
+        <button class="back-button" id="back-to-dashboard-3"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="print-expense-section">
+        <h3 class="mb-4">Cetak Pengeluaran (PDF)</h3>
+        <form id="print-expense-form" class="text-start"> <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="print-year" class="form-label">Tahun</label>
+                <select id="print-year" class="form-select" required></select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="print-month" class="form-label">Bulan</label>
+                <select id="print-month" class="form-select" required></select>
+              </div>
+          </div>
+          <div class="mb-3">
+            <label for="tujuan-pengeluaran" class="form-label">Tujuan Pengeluaran</label>
+            <input type="text" id="tujuan-pengeluaran" class="form-control" placeholder="Misalnya: Kebutuhan Bulanan" required>
+          </div>
+          <div class="mb-3">
+            <label for="print-monthly-target" class="form-label">Saldo Awal (Rp)</label>
+            <input type="number" id="print-monthly-target" class="form-control" placeholder="Masukkan Saldo Awal" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100"><i class="fas fa-print me-2"></i> Cetak PDF</button>
+        </form>
+        <button class="back-button" id="back-to-dashboard-4"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="history-expense-section">
+        <h3 class="mb-4">Riwayat Pengeluaran</h3>
+        <div class="row justify-content-center mb-3">
+           <div class="col-md-4">
+               <label for="history-year" class="form-label">Tahun</label>
+               <select id="history-year" class="form-select mb-2 mb-md-0"></select>
+           </div>
+           <div class="col-md-4">
+               <label for="history-month" class="form-label">Bulan</label>
+               <select id="history-month" class="form-select"></select>
+           </div>
+        </div>
+        <div id="history-export-buttons" class="text-center mb-3" style="display: none;"></div>
+        
+        <div id="history-content" class="mt-4" style="max-height: 65vh; overflow-y: auto;"> 
+          <p class="text-muted">Pilih tahun dan bulan untuk melihat riwayat.</p>
+        </div>
+        <button class="back-button" id="back-to-dashboard-5"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+
+      <div class="section" id="analisis-section">
+        <h3 class="mb-4">Analisis Sederhana</h3>
+        <p class="text-muted mb-4">Pilih jenis analisis yang ingin Anda lihat:</p>
+        <div class="row justify-content-center g-3"> <div class="col-md-5 mb-3">
+             <button class="menu-button w-100" id="goto-anomali">
+               <i class="fas fa-exclamation-triangle"></i> Deteksi Anomali
+             </button>
+             <small class="text-muted d-block mt-1">Lihat transaksi tak biasa bulan ini.</small> </div>
+          <div class="col-md-5 mb-3">
+             <button class="menu-button w-100" id="goto-prediksi">
+               <i class="fas fa-calculator"></i> Gambaran Umum Pengeluaran
+             </button>
+             <small class="text-muted d-block mt-1">Lihat rata-rata pengeluaran berdasarkan kriteria.</small> </div>
+        </div>
+         <button class="back-button" id="back-analisis-to-dashboard"><i class="fas fa-arrow-left me-2"></i> Kembali ke Dashboard</button>
+      </div>
+      
+      <div class="section" id="anomali-detail-section">
+        <h3 class="mb-4"> Deteksi Anomali Pengeluaran</h3>
+        <p class="text-muted mb-3 small">Transaksi <b>bulan ini</b> yang jumlahnya berbeda signifikan dari kebiasaan historis Anda per kategori.</p>
+
+        <div class="mb-3">
+          <label for="anomali-kategori-filter" class="form-label form-label-sm">Filter Kategori:</label>
+          <select id="anomali-kategori-filter" class="form-select form-select-sm">
+            <option value="semua" selected>Tampilkan Semua Kategori</option>
+            </select>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-start mb-3">Grafik Pengeluaran Bulan Ini</h5>
+                <div class="chart-container mb-1" id="anomali-chart-container" style="height: 400px;">
+                   <canvas id="anomali-chart"></canvas>
+                   <div id="anomali-loading" class="position-absolute top-50 start-50 translate-middle text-center text-muted" style="display: none;">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        <p class="mt-2">Memproses data...</p>
+                    </div>
+                     <div id="anomali-no-data" class="position-absolute top-50 start-50 translate-middle text-center text-muted" style="display: none;">
+                        <i class="fas fa-info-circle fa-2x"></i>
+                        <p class="mt-2">Data bulan ini tidak cukup untuk analisis.</p>
+                    </div>
+                </div>
+                 <div class="text-center mt-2">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#anomali-description-collapse" aria-expanded="false" aria-controls="anomali-description-collapse">
+                      <i class="fas fa-info-circle me-1"></i> Penjelasan Grafik <i class="fas fa-chevron-down ms-1 toggle-icon"></i>
+                    </button>
+                </div>
+                <div class="collapse mt-2" id="anomali-description-collapse">
+                  <div class="card card-body card-body-sm text-start text-muted small">
+                    <p class="mb-2">Grafik ini menampilkan semua transaksi Anda bulan ini (berdasarkan tanggal dan jumlah pengeluaran). Analisis ini menggunakan metode IQR (Interquartile Range).</p>
+                    <div class="d-flex align-items-center mb-1">
+                      <span style="width: 12px; height: 12px; background-color: #D32F2F; border-radius: 50%; display: inline-block; margin-right: 8px; border: 1px solid #B71C1C;"></span>
+                      <strong>Titik Merah (Anomali):</strong>
+                      <span class="ms-1">Transaksi di luar rentang normal untuk kategorinya.</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="width: 12px; height: 12px; background-color: #0D6EFD; border-radius: 50%; display: inline-block; margin-right: 8px; border: 1px solid #0A58CA;"></span>
+                      <strong>Titik Biru (Normal):</strong>
+                      <span class="ms-1">Transaksi normal dalam rentang wajar.</span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+         <button class="back-button" id="back-anomali-to-analisis"><i class="fas fa-arrow-left me-2"></i> Kembali ke Analisis</button>
+      </div>
+
+      <div class="section" id="prediksi-detail-section">
+         <h3 class="mb-4"> Gambaran Umum Pengeluaran</h3>
+         <p class="text-muted mb-3 small">Lihat Gambaran Umum Pengeluaran berdasarkan rata-rata riwayat pengeluaran Anda.</p>
+         
+         <div id="prediksi-form" class="card card-body mb-3 text-start">
+            <h6 class="card-title mb-3">Pilih Kriteria:</h6>
+            <div class="row g-2 align-items-end">
+               <div class="col-sm-6 col-md-4">
+                  <label for="prediksi-kriteria-1" class="form-label form-label-sm">Kriteria Utama:</label>
+                  <select id="prediksi-kriteria-1" class="form-select form-select-sm">
+                     <option value="" selected>(Pilih Kriteria)</option>
+                     <option value="Nama Hari">Nama Hari</option>
+                     <option value="Jenis Hari">Jenis Hari</option>
+                     <option value="Bagian Hari">Bagian Hari</option>
+                     <option value="Bagian Bulan">Bagian Bulan</option>
+                     <option value="Minggu ke-">Minggu ke-</option>
+                     <option value="Kategori">Kategori</option>
+                  </select>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <label for="prediksi-nilai-1" class="form-label form-label-sm">Nilai:</label>
+                  <select id="prediksi-nilai-1" class="form-select form-select-sm" disabled>
+                     <option value="">(Pilih Kriteria Utama Dulu)</option>
+                  </select>
+               </div>
+               <div class="col-12 mt-2 pt-2 border-top">
+                 <div class="form-check form-switch mb-2"> <input class="form-check-input" type="checkbox" role="switch" id="enable-kriteria-2">
+                   <label class="form-check-label small" for="enable-kriteria-2">
+                     Gunakan Kriteria Kombinasi?
+                   </label>
+                 </div>
+                 <div class="row g-2" id="prediksi-kriteria-2-inputs" style="display: none;">
+                     <div class="col-sm-6">
+                        <label for="prediksi-kriteria-2" class="form-label form-label-sm">Kriteria Kombinasi:</label>
+                        <select id="prediksi-kriteria-2" class="form-select form-select-sm" disabled></select>
+                     </div>
+                     <div class="col-sm-6">
+                        <label for="prediksi-nilai-2" class="form-label form-label-sm">Nilai:</label>
+                        <select id="prediksi-nilai-2" class="form-select form-select-sm" disabled>
+                            <option value="">(Pilih Kriteria Kombinasi Dulu)</option>
+                        </select>
+                     </div>
+                 </div>
+               </div>
+               <div class="col-12 d-grid mt-3">
+                  <button id="btn-prediksi" class="btn btn-primary" disabled><i class="fas fa-calculator me-2"></i> Lihat Hasil</button>
+               </div>
+            </div>
+         </div> 
+            
+         <div id="prediksi-results-container" class="mt-4" style="display: none;"> 
+           <div class="card">
+             <div class="card-body">
+                 <h5 class="card-title text-start mb-3">Hasil Gambaran Umum</h5>
+
+                  <div id="prediksi-processing-animation" class="text-center" style="display: none; padding: 20px 0;">
+                    <div class="processing-text">Mengolah data riwayat...</div>
+                    <div class="processing-bar">
+                      <div class="processing-bar-fill"></div>
+                    </div>
+                 </div>
+                 <div id="prediksi-insight-content" class="text-start" style="display: none;">
+                     </div>
+                 <div id="prediksi-no-data" class="text-center text-muted" style="display: none; padding: 20px 0;">
+                     <i class="fas fa-info-circle fa-2x mb-2"></i>
+                     <p>Data historis tidak ditemukan untuk kriteria ini.</p>
+                 </div>
+             </div> 
+           </div> 
+         </div>
+         <button class="back-button" id="back-prediksi-to-analisis"><i class="fas fa-arrow-left me-2"></i> Kembali ke Analisis</button>
+      </div>
+
+    </main> <button class="logout-button btn" id="logout-btn"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
+
+  </div> <div class="modal fade" id="tipsModal" tabindex="-1" aria-labelledby="tipsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tipsModalLabel">Tips</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-tips-content"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="customConfirmModal" tabindex="-1" aria-labelledby="customConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" id="custom-confirm-header">
+        <h5 class="modal-title" id="custom-confirm-title">Konfirmasi Tindakan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="custom-confirm-body" style="text-align: center; font-size: 1rem; line-height: 1.5;">
+        Anda yakin?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="custom-confirm-yes-btn">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="modal fade" id="dailyDetailModal" tabindex="-1" aria-labelledby="dailyDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="dailyDetailModalLabel">Detail Pengeluaran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="fw-bold text-center mb-2" id="daily-detail-total">Total: Rp0</p>
+          <ul class="list-group list-group-flush" id="daily-detail-list"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">Informasi</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="infoModalBody" style="text-align: center; font-size: 1rem; line-height: 1.5;">
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="zoomModalLabel">Mode Layar Penuh</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="zoom-modal-body">
+          <div id="rotate-hint" class="rotate-hint-overlay" style="display: none;">
+            <i class="fas fa-mobile-alt fa-rotate-90"></i>
+            <span>Putar layar HP Anda untuk tampilan terbaik</span>
+          </div>
+          <canvas id="zoom-chart-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="print-animation" id="print-animation">
+    <div class="spinner"><i class="fas fa-spinner fa-spin"></i></div>
+    <div class="print-text">Sedang mencetak...</div>
+  </div>
+
+  <div class="modal fade" id="budgetModal" tabindex="-1" aria-labelledby="budgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="budget-form">
+          <div class="modal-header">
+            <h5 class="modal-title" id="budgetModalLabel">Atur Budget Bulanan</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small">Tetapkan total budget pengeluaran Anda untuk bulan ini.</p>
+            <div class="mb-3">
+              <label for="budget-jumlah" class="form-label">Total Budget (Rp)</label>
+              <input type="number" class="form-control" id="budget-jumlah" placeholder="Contoh: 2000000" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="pemasukanModal" tabindex="-1" aria-labelledby="pemasukanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="pemasukan-form">
+          <div class="modal-header">
+            <h5 class="modal-title" id="pemasukanModalLabel">Tambah Pemasukan</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="pemasukan-jumlah" class="form-label">Jumlah (Rp)</label>
+              <input type="number" class="form-control" id="pemasukan-jumlah" required>
+            </div>
+            <div class="mb-3">
+              <label for="pemasukan-keterangan" class="form-label">Keterangan (Opsional)</label>
+              <input type="text" class="form-control" id="pemasukan-keterangan" placeholder="Misal: Gaji, Bonus...">
+            </div>
+            <div class="mb-3">
+              <label class="form-label mb-2 fw-semibold">Masukkan ke:</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="pemasukan-tujuan" id="tujuan-bank" value="bank" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="tujuan-bank"><i class="fas fa-university me-2"></i>Bank (Non-Tunai)</label>
+                
+                <input type="radio" class="btn-check" name="pemasukan-tujuan" id="tujuan-tunai" value="tunai" autocomplete="off">
+                <label class="btn btn-outline-primary" for="tujuan-tunai"><i class="fas fa-wallet me-2"></i>Dompet (Tunai)</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="transfer-form">
+          <div class="modal-header">
+            <h5 class="modal-title" id="transferModalLabel">Pindah Uang ke Dompet</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted">Saldo Bank Anda saat ini: <strong id="transfer-saldo-bank">Rp0</strong></p>
+            <div class="mb-3">
+              <label for="transfer-jumlah" class="form-label">Jumlah Transfer (Rp)</label>
+              <input type="number" class="form-control" id="transfer-jumlah" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Transfer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="transfer-animation-overlay" id="transfer-animation" style="display: none;">
+    <div class="transfer-animation-content">
+      <i class="fas fa-university fa-3x"></i>
+      <span class="transfer-dots">...</span>
+      <i class="fas fa-wallet fa-3x"></i>
+    </div>
+    <div class="transfer-animation-text">Mengirim uang ke dompet...</div>
+  </div>
+
+  <div class="pemasukan-animation-overlay" id="pemasukan-animation" style="display: none;">
+  <div class="pemasukan-animation-content">
+    <i class="fas fa-money-bill-wave fa-3x" id="pemasukan-anim-source"></i>
+    <span class="transfer-dots">...</span>
+    <i class="fas fa-wallet fa-3x" id="pemasukan-anim-target-tunai"></i>
+    <i class="fas fa-university fa-3x" id="pemasukan-anim-target-bank"></i>
+  </div>
+  <div class="transfer-animation-text" id="pemasukan-anim-text">Menyimpan ke...</div>
+</div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  
+  <script src="script.js"></script>
+</body>
+</html>
